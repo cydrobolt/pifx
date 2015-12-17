@@ -29,7 +29,7 @@ setup(
     # https://packaging.python.org/en/latest/single_source_version.html
     version='0.0.1',
 
-    description="""pifx is a Python library for the LIFX cloud HTTP API""",
+    description="""PIFX is a Python library for the LIFX cloud HTTP API""",
 
     # The project's main homepage.
     url='https://github.com/cydrobolt/pifx',

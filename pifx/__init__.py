@@ -25,6 +25,7 @@ class PIFX:
         self.api_key = api_key
         # generate HTTP authentication header
         self.headers = util.generate_auth_header(self.api_key)
+        self._s. = requests.Session()
 
     def full_http_endpoint(self, suffix):
         return self.http_base + suffix
@@ -56,7 +57,7 @@ class PIFX:
         endpoint = full_http_endpoint(
             "lights/{}".format(selector)
         )
-        res = request.get(endpoint, headers=self.headers)
+        res = self._s.get(endpoint, headers=self.headers)
         parsed_data = self.parsed_response(res)
 
         if self.has_error(res):
@@ -72,19 +73,26 @@ class PIFX:
         Returns list of lightbulb statuses if successful.
         See http://api.developer.lifx.com/v1/docs/selectors
 
-        Arguments (all optional):
-            power (str):
-                e.g "on" or "off"
-            color (str):
-                e.g #ff0000 or "red"
-                Hex color code, color name, saturation percentage, hue, RGB, etc.
-                See http://api.developer.lifx.com/v1/docs/colors
-            brightness (double):
-                e.g 0.5
-                Brightness level from 0 to 1
-            duration (double):
-                e.g 10
-                Transition time, in seconds. From 0.0 to 3155760000.0 (100 years).
+        selector: required String
+            The selector to limit which lights will run the effect.
+
+        power: String
+            e.g "on" or "off"
+
+        color: String
+            e.g #ff0000 or "red"
+            Color to set selected bulbs.
+            Hex color code, color name, saturation percentage, hue, RGB, etc.
+            See http://api.developer.lifx.com/v1/docs/colors
+
+        brightness: Double
+            e.g 0.5
+            Set brightness level from 0 to 1
+
+        duration: Double
+            e.g 10
+            Setting transition time, in seconds, from 0.0 to 3155760000.0 (100 years).
+
         """
 
         endpoint = full_http_endpoint(
@@ -96,12 +104,9 @@ class PIFX:
             ('brightness', brightness),
             ('duration', duration)
         ]
-        data = dict()
-        for arg_name, arg_val in argument_tuples:
-            if arg_val not None:
-                data[arg_name] = arg_val
+        data = util.arg_tup_to_dict(argument_tuples)
 
-        res = request.put(endpoint, data=data, headers=self.headers)
+        res = self._s.put(endpoint, data=data, headers=self.headers)
         parsed_data = self.parsed_response(res)
 
         if self.has_error(res):
@@ -119,7 +124,7 @@ class PIFX:
             "duration": duration
         }
 
-        res = request.post(endpoint, data=data, headers=self.headers)
+        res = self._s.post(endpoint, data=data, headers=self.headers)
         parsed_data = self.parsed_response(res)
 
         if self.has_error(res):
@@ -132,8 +137,10 @@ class PIFX:
         persist=False, power_on=True, peak=0.5, duration=1.0):
         """
         Perform breathe effect on lights.
-        selector: required String
+
+        selector: String
             The selector to limit which lights will run the effect.
+            default: all
 
         color: required String
             Color attributes to use during effect. See set_state for more.
@@ -166,17 +173,178 @@ class PIFX:
 
         """
         endpoint = full_http_endpoint(
-            "lights/{}/toggle".format(selector)
+            "lights/{}/effects/breathe".format(selector)
         )
 
         data = {
+            "selector": selector,
+            "color": color,
+            "from_color": from_color,
+            "period": period,
+            "cycles": cycles,
+            "persist": persist,
+            "power_on": power_on,
+            "peak": peak,
             "duration": duration
         }
 
-        res = request.post(endpoint, data=data, headers=self.headers)
+        res = self._s.post(endpoint, data=data, headers=self.headers)
         parsed_data = self.parsed_response(res)
 
         if self.has_error(res):
             return self.handle_error(parsed_data)
 
         return self.parse_data(parsed_data)
+
+    def pulse_lights(self, selector='all',
+        color, from_color=None, period=1.0, cycles=1.0,
+        persist=False, power_on=True, peak=0.5, duration=1.0):
+        """
+        Perform pulse effect on lights.
+
+        selector: String
+            The selector to limit which lights will run the effect.
+            default: all
+
+        color: required String
+            Color attributes to use during effect. See set_state for more.
+
+        from_color:	String
+            The color to start the effect from. See set_state for more.
+            default: current bulb color
+
+        period:	Double
+            The time in seconds for one cyles of the effect.
+            default: 1.0
+
+        cycles:	Double
+            The number of times to repeat the effect.
+            default: 1.0
+
+        persist: Boolean
+            If false set the light back to its previous
+            value when effect ends, if true leave the last effect color.
+            default: false
+
+        power_on: Boolean
+            If true, turn the bulb on if it is not already on.
+            default: true
+
+        peak: String
+            Defines where in a period the target color is at its maximum.
+            Minimum 0.0, maximum 1.0.
+            default: 0.5
+
+        """
+        endpoint = full_http_endpoint(
+            "lights/{}/effects/pulse".format(selector)
+        )
+
+        data = {
+            "color": color,
+            "from_color": from_color,
+            "period": period,
+            "cycles": cycles,
+            "persist": persist,
+            "power_on": power_on,
+            "peak": peak,
+            "duration": duration
+        }
+
+        res = self._s.post(endpoint, data=data, headers=self.headers)
+        parsed_data = self.parsed_response(res)
+
+        if self.has_error(res):
+            return self.handle_error(parsed_data)
+
+        return self.parse_data(parsed_data)
+
+    def cycle_lights(self, selector='all',
+        states, defaults, direction='forward'):
+        """
+        Cycle through list of effects.
+
+        Provide array states as a list of dictionaries with set_state arguments.
+        See http://api.developer.lifx.com/docs/cycle
+
+        selector: String
+            The selector to limit which lights will run the effect.
+            default: all
+
+        states: required List of Dicts
+            List of arguments, named as per set_state. Must have 2 to 5 entries.
+
+        defaults: Object
+            Default values to use when not specified in each states[] object.
+            Argument names as per set_state.
+
+        direction: String
+            Direction in which to cycle through the list. Can be forward or backward
+            default: forward
+        """
+        endpoint = full_http_endpoint(
+            "lights/{}/cycle".format(selector)
+        )
+
+        states_json = json.dumps(states)
+
+        data = {
+            'states': states_json,
+            'defaults': defaults,
+            'direction': direction
+        }
+
+        res = self._s.post(endpoint, data=data, headers=self.headers)
+        parsed_data = self.parsed_response(res)
+
+        if self.has_error(res):
+            return self.handle_error(parsed_data)
+
+        return self.parse_data(parsed_data)
+
+    def list_scenes(self):
+        """
+        Return a list of scenes.
+        See http://api.developer.lifx.com/docs/list-scenes
+        """
+
+        endpoint = full_http_endpoint(
+            "scenes"
+        )
+        res = self._s.get(endpoint, headers=self.headers)
+        parsed_data = self.parsed_response(res)
+
+        if self.has_error(res):
+            return self.handle_error(parsed_data)
+
+        return parsed_data
+
+    def activate_scene(self, scene_uuid, duration=1.0):
+        """
+        Return a list of scenes.
+
+        See http://api.developer.lifx.com/docs/activate-scene
+
+        scene_uuid: required String
+            The UUID for the scene you wish to activate
+
+        duration: Double
+            The time in seconds to spend performing the scene transition.
+            default: 1.0
+        """
+
+        endpoint = full_http_endpoint(
+            "scenes/{}/activate".format(scene_uuid)
+        )
+
+        data = {
+            'duration': duration
+        }
+
+        res = self._s.put(endpoint, data=data, headers=self.headers)
+        parsed_data = self.parsed_response(res)
+
+        if self.has_error(res):
+            return self.handle_error(parsed_data)
+
+        return parsed_data
