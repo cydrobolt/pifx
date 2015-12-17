@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-import requests
+import requests, json
 import util
 
 class PIFX:
@@ -23,6 +23,9 @@ class PIFX:
         # use default API base endpoint if none defined
         if http_endpoint == None:
             self.http_base = "https://api.lifx.com/v1/"
+        else:
+            self.http_base = http_endpoint
+
         self.api_key = api_key
         # generate HTTP authentication header
         self.headers = util.generate_auth_header(self.api_key)
@@ -31,38 +34,19 @@ class PIFX:
     def full_http_endpoint(self, suffix):
         return self.http_base + suffix
 
-    def parse_data(self, response):
-        parsed_response = json.loads(response.text)
-        return parsed_response
-
-    def has_error(self, response):
-        """Return True if request contains error, False if request is successful"""
-        if response.status_code != 200:
-            return True
-        else:
-            return False
-
-    def handle_error(self, parsed_data):
-        """Given parsed response, raise appropriate errors."""
-        return False
-    def parse_data(self, parsed_data):
-        """Given parsed response, return correct return values"""
-        return parsed_data['results']
-
     def list_lights(self, selector='all'):
         """
         Given a selector (defaults to all), return a list of lights.
         Without a selector provided, return list of all lights.
         """
 
-        endpoint = full_http_endpoint(
+        endpoint = self.full_http_endpoint(
             "lights/{}".format(selector)
         )
         res = self._s.get(endpoint, headers=self.headers)
-        parsed_data = self.parsed_response(res)
+        parsed_data = util.parse_response(res)
 
-        if self.has_error(res):
-            return self.handle_error(parsed_data)
+        util.handle_error(res)
 
         return parsed_data
 
@@ -96,7 +80,7 @@ class PIFX:
 
         """
 
-        endpoint = full_http_endpoint(
+        endpoint = self.full_http_endpoint(
             "lights/{}/state".format(selector)
         )
         argument_tuples = [
@@ -108,16 +92,15 @@ class PIFX:
         data = util.arg_tup_to_dict(argument_tuples)
 
         res = self._s.put(endpoint, data=data, headers=self.headers)
-        parsed_data = self.parsed_response(res)
+        parsed_data = util.parse_response(res)
 
-        if self.has_error(res):
-            return self.handle_error(parsed_data)
+        util.handle_error(res)
 
-        return self.parse_data(parsed_data)
+        return util.parse_data(parsed_data)
 
     def toggle_power(self, selector='all', duration=1.0):
         """Given a selector and transition duration, toggle lights (on/off)"""
-        endpoint = full_http_endpoint(
+        endpoint = self.full_http_endpoint(
             "lights/{}/toggle".format(selector)
         )
 
@@ -126,12 +109,11 @@ class PIFX:
         }
 
         res = self._s.post(endpoint, data=data, headers=self.headers)
-        parsed_data = self.parsed_response(res)
+        parsed_data = util.parse_response(res)
 
-        if self.has_error(res):
-            return self.handle_error(parsed_data)
+        util.handle_error(res)
 
-        return self.parse_data(parsed_data)
+        return util.parse_data(parsed_data)
 
     def breathe_lights(self, color, selector='all',
         from_color=None, period=1.0, cycles=1.0,
@@ -173,7 +155,7 @@ class PIFX:
             default: 0.5
 
         """
-        endpoint = full_http_endpoint(
+        endpoint = self.full_http_endpoint(
             "lights/{}/effects/breathe".format(selector)
         )
 
@@ -190,12 +172,11 @@ class PIFX:
         }
 
         res = self._s.post(endpoint, data=data, headers=self.headers)
-        parsed_data = self.parsed_response(res)
+        parsed_data = util.parse_response(res)
 
-        if self.has_error(res):
-            return self.handle_error(parsed_data)
+        util.handle_error(res)
 
-        return self.parse_data(parsed_data)
+        return util.parse_data(parsed_data)
 
     def pulse_lights(self, color, selector='all',
         from_color=None, period=1.0, cycles=1.0,
@@ -237,7 +218,7 @@ class PIFX:
             default: 0.5
 
         """
-        endpoint = full_http_endpoint(
+        endpoint = self.full_http_endpoint(
             "lights/{}/effects/pulse".format(selector)
         )
 
@@ -253,12 +234,11 @@ class PIFX:
         }
 
         res = self._s.post(endpoint, data=data, headers=self.headers)
-        parsed_data = self.parsed_response(res)
+        parsed_data = util.parse_response(res)
 
-        if self.has_error(res):
-            return self.handle_error(parsed_data)
+        util.handle_error(res)
 
-        return self.parse_data(parsed_data)
+        return util.parse_data(parsed_data)
 
     def cycle_lights(self, states,
         defaults, direction='forward', selector='all',):
@@ -283,7 +263,7 @@ class PIFX:
             Direction in which to cycle through the list. Can be forward or backward
             default: forward
         """
-        endpoint = full_http_endpoint(
+        endpoint = self.full_http_endpoint(
             "lights/{}/cycle".format(selector)
         )
 
@@ -296,12 +276,11 @@ class PIFX:
         }
 
         res = self._s.post(endpoint, data=data, headers=self.headers)
-        parsed_data = self.parsed_response(res)
+        parsed_data = util.parse_response(res)
 
-        if self.has_error(res):
-            return self.handle_error(parsed_data)
+        util.handle_error(res)
 
-        return self.parse_data(parsed_data)
+        return util.parse_data(parsed_data)
 
     def list_scenes(self):
         """
@@ -309,14 +288,13 @@ class PIFX:
         See http://api.developer.lifx.com/docs/list-scenes
         """
 
-        endpoint = full_http_endpoint(
+        endpoint = self.full_http_endpoint(
             "scenes"
         )
         res = self._s.get(endpoint, headers=self.headers)
-        parsed_data = self.parsed_response(res)
+        parsed_data = util.parse_response(res)
 
-        if self.has_error(res):
-            return self.handle_error(parsed_data)
+        util.handle_error(res)
 
         return parsed_data
 
@@ -334,8 +312,8 @@ class PIFX:
             default: 1.0
         """
 
-        endpoint = full_http_endpoint(
-            "scenes/{}/activate".format(scene_uuid)
+        endpoint = self.full_http_endpoint(
+            "scenes/scene_id:{}/activate".format(scene_uuid)
         )
 
         data = {
@@ -343,9 +321,6 @@ class PIFX:
         }
 
         res = self._s.put(endpoint, data=data, headers=self.headers)
-        parsed_data = self.parsed_response(res)
-
-        if self.has_error(res):
-            return self.handle_error(parsed_data)
+        parsed_data = util.parse_response(res)
 
         return parsed_data
