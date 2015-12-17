@@ -21,11 +21,12 @@ import util
 class PIFX:
     def __init__(self, api_key, http_endpoint=None):
         # use default API base endpoint if none defined
-        self.http_base = "https://api.lifx.com/v1/" if http_endpoint == None
+        if http_endpoint == None:
+            self.http_base = "https://api.lifx.com/v1/"
         self.api_key = api_key
         # generate HTTP authentication header
         self.headers = util.generate_auth_header(self.api_key)
-        self._s. = requests.Session()
+        self._s = requests.Session()
 
     def full_http_endpoint(self, suffix):
         return self.http_base + suffix
@@ -132,8 +133,8 @@ class PIFX:
 
         return self.parse_data(parsed_data)
 
-    def breathe_lights(self, selector='all',
-        color, from_color=None, period=1.0, cycles=1.0,
+    def breathe_lights(self, color, selector='all',
+        from_color=None, period=1.0, cycles=1.0,
         persist=False, power_on=True, peak=0.5, duration=1.0):
         """
         Perform breathe effect on lights.
@@ -196,8 +197,8 @@ class PIFX:
 
         return self.parse_data(parsed_data)
 
-    def pulse_lights(self, selector='all',
-        color, from_color=None, period=1.0, cycles=1.0,
+    def pulse_lights(self, color, selector='all',
+        from_color=None, period=1.0, cycles=1.0,
         persist=False, power_on=True, peak=0.5, duration=1.0):
         """
         Perform pulse effect on lights.
@@ -259,8 +260,8 @@ class PIFX:
 
         return self.parse_data(parsed_data)
 
-    def cycle_lights(self, selector='all',
-        states, defaults, direction='forward'):
+    def cycle_lights(self, states,
+        defaults, direction='forward', selector='all',):
         """
         Cycle through list of effects.
 
