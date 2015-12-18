@@ -294,7 +294,7 @@ class PIFX:
         return parsed_data
 
     def activate_scene(self, scene_uuid, duration=1.0):
-        """Return a list of scenes.
+        """Activate a scenes.
 
         See http://api.developer.lifx.com/docs/activate-scene
 
