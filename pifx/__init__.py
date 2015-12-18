@@ -19,6 +19,7 @@ import requests, json
 import util
 
 class PIFX:
+    """Main PIFX class"""
     def __init__(self, api_key, http_endpoint=None):
         # use default API base endpoint if none defined
         if http_endpoint == None:
@@ -35,8 +36,7 @@ class PIFX:
         return self.http_base + suffix
 
     def list_lights(self, selector='all'):
-        """
-        Given a selector (defaults to all), return a list of lights.
+        """Given a selector (defaults to all), return a list of lights.
         Without a selector provided, return list of all lights.
         """
 
@@ -52,8 +52,7 @@ class PIFX:
 
     def set_state(self, selector='all',
         power=None, color=None, brightness=None, duration=None):
-        """
-        Given a selector (defaults to all), set the state of a light.
+        """Given a selector (defaults to all), set the state of a light.
         Selector can be based on id, scene_id, group_id, label, etc.
         Returns list of lightbulb statuses if successful.
         See http://api.developer.lifx.com/v1/docs/selectors
@@ -118,8 +117,7 @@ class PIFX:
     def breathe_lights(self, color, selector='all',
         from_color=None, period=1.0, cycles=1.0,
         persist=False, power_on=True, peak=0.5, duration=1.0):
-        """
-        Perform breathe effect on lights.
+        """Perform breathe effect on lights.
 
         selector: String
             The selector to limit which lights will run the effect.
@@ -181,8 +179,7 @@ class PIFX:
     def pulse_lights(self, color, selector='all',
         from_color=None, period=1.0, cycles=1.0,
         persist=False, power_on=True, peak=0.5, duration=1.0):
-        """
-        Perform pulse effect on lights.
+        """Perform pulse effect on lights.
 
         selector: String
             The selector to limit which lights will run the effect.
@@ -242,8 +239,7 @@ class PIFX:
 
     def cycle_lights(self, states,
         defaults, direction='forward', selector='all',):
-        """
-        Cycle through list of effects.
+        """Cycle through list of effects.
 
         Provide array states as a list of dictionaries with set_state arguments.
         See http://api.developer.lifx.com/docs/cycle
@@ -283,8 +279,7 @@ class PIFX:
         return util.parse_data(parsed_data)
 
     def list_scenes(self):
-        """
-        Return a list of scenes.
+        """Return a list of scenes.
         See http://api.developer.lifx.com/docs/list-scenes
         """
 
@@ -299,8 +294,7 @@ class PIFX:
         return parsed_data
 
     def activate_scene(self, scene_uuid, duration=1.0):
-        """
-        Return a list of scenes.
+        """Return a list of scenes.
 
         See http://api.developer.lifx.com/docs/activate-scene
 
