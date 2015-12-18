@@ -3,8 +3,15 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to PIFX's documentation!
-================================
+.. image:: /_static/pifx.png
+   :width: 300px
+
+
+`````````````````````````
+Developer Documentation
+`````````````````````````
+
+=============================
 
 Contents:
 
@@ -12,8 +19,8 @@ Contents:
    :maxdepth: 2
 
 .. automodule:: pifx
-
 .. autoclass:: PIFX
+    :members:
 
 
 Indices and tables
