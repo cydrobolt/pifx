@@ -11,7 +11,7 @@ Install PIFX from source:
  - `git clone https://github.com/cydrobolt/pifx.git`
  - `cd pifx`
  - `python setup.py install`
-t
+
 ### Using PIFX
 
 Create an API key
