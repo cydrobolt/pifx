@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-.. image:: /_static/pifx.png
-   :width: 300px
+.. raw:: html
+    <img src='/_static/pifx.png style='width:300px' />
 
 
 `````````````````````````
