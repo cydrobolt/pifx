@@ -5,8 +5,9 @@
 
 .. raw:: html
 
+
     <div style='text-align: center'>
-        <img src='/_static/pifx.png' style='width:300px' />
+        <img src='_static/pifx.png' style='width:300px' />
         <h3>Developer Documentation</h3>
     </div>
 
