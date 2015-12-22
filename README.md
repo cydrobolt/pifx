@@ -4,10 +4,10 @@ A Python library for the LIFX cloud HTTP API
 
 ### Installing PIFX
 
-Install PIFX using `pip`: 
+Install PIFX using `pip`:
  - `pip install pifx`
 
-Install PIFX from source: 
+Install PIFX from source:
  - `git clone https://github.com/cydrobolt/pifx.git`
  - `cd pifx`
  - `python setup.py install`
@@ -31,7 +31,9 @@ import pifx
 
 p = pifx.PIFX(api_key='API_KEY_GOES_HERE')
 
-p.toggle_lights() # toggle all lights`
+p.toggle_power() # toggle all lights
+p.toggle_power('label:Bedroom') # toggle light with label "Master Bedroom"
+
 p.set_state(color='blue', brightness='0.85') # set brightness to 85% and color to blue
 p.pulse_lights(color='red', duration=2.5) # pulse lights for 2.5 seconds
 ```
@@ -40,7 +42,7 @@ Read [the docs](http://pifx.readthedocs.org/en/latest/) for full usage instructi
 
 ### Hacking on PIFX
 
-Running tests: 
+Running tests:
  - `pip install nose`
  - `nosetests`
 
