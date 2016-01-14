@@ -15,8 +15,8 @@
 # limitations under the License.
 #
 
-import requests, json
-import util
+import util, re
+import requests, json, six
 
 class PIFX:
     """Main PIFX class"""
@@ -32,6 +32,26 @@ class PIFX:
         self.headers = util.generate_auth_header(self.api_key)
         self._s = requests.Session()
 
+    def encode_url_arg(self, url_arg):
+        arg_regex = '(\w+):(.*)'
+
+        if ":" not in url_arg:
+            # no identifiers
+            # can encode entire argument
+            return six.moves.urllib.parse.quote_plus(url_arg)
+        else:
+            # identifier found
+            # separate identifier string from argument
+            # text, then encode argument text
+            url_arg_matches = re.match(arg_regex, url_arg)
+
+            identifier_name = url_arg_matches.group(1)
+            argument_content = url_arg_matches.group(2)
+
+            encoded_arg = six.moves.urllib.parse.quote_plus(argument_content)
+
+            return identifier_name + ":" + encoded_arg
+
     def full_http_endpoint(self, suffix):
         return self.http_base + suffix
 
@@ -41,7 +61,7 @@ class PIFX:
         """
 
         endpoint = self.full_http_endpoint(
-            "lights/{}".format(selector)
+            "lights/{}".format(self.encode_url_arg(selector))
         )
         res = self._s.get(endpoint, headers=self.headers)
         parsed_data = util.parse_response(res)
@@ -80,7 +100,7 @@ class PIFX:
         """
 
         endpoint = self.full_http_endpoint(
-            "lights/{}/state".format(selector)
+            "lights/{}/state".format(self.encode_url_arg(selector))
         )
         argument_tuples = [
             ('power', power),
@@ -100,7 +120,7 @@ class PIFX:
     def toggle_power(self, selector='all', duration=1.0):
         """Given a selector and transition duration, toggle lights (on/off)"""
         endpoint = self.full_http_endpoint(
-            "lights/{}/toggle".format(selector)
+            "lights/{}/toggle".format(self.encode_url_arg(selector))
         )
 
         data = {
@@ -154,7 +174,7 @@ class PIFX:
 
         """
         endpoint = self.full_http_endpoint(
-            "lights/{}/effects/breathe".format(selector)
+            "lights/{}/effects/breathe".format(self.encode_url_arg(selector))
         )
 
         data = {
@@ -216,7 +236,7 @@ class PIFX:
 
         """
         endpoint = self.full_http_endpoint(
-            "lights/{}/effects/pulse".format(selector)
+            "lights/{}/effects/pulse".format(self.encode_url_arg(selector))
         )
 
         data = {
@@ -260,7 +280,7 @@ class PIFX:
             default: forward
         """
         endpoint = self.full_http_endpoint(
-            "lights/{}/cycle".format(selector)
+            "lights/{}/cycle".format(self.encode_url_arg(selector))
         )
 
         states_json = json.dumps(states)
