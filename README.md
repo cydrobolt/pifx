@@ -1,5 +1,7 @@
 <img src="files/pifx.png" width="300">
 
+<img alt="Build Status Images" src="https://travis-ci.org/cydrobolt/pifx.svg">
+
 A Python library for the LIFX cloud HTTP API
 
 ### Installing PIFX
