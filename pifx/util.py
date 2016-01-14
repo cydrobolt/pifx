@@ -16,7 +16,7 @@
 #
 
 import json
-from constants import A_OK_HTTP_CODES, A_ERROR_HTTP_CODES
+from .constants import A_OK_HTTP_CODES, A_ERROR_HTTP_CODES
 
 def generate_auth_header(api_key):
     headers = {
