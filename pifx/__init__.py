@@ -15,7 +15,8 @@
 # limitations under the License.
 #
 
-import util, re
+from . import util
+import re
 import requests, json, six
 
 class PIFX:
