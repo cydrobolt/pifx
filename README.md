@@ -1,7 +1,5 @@
 <img src="files/pifx.png" width="300">
 
-<a href='https://travis-ci.org/cydrobolt/pifx'><img alt="Build Status Images" src=""></a>
-
 [![](https://travis-ci.org/cydrobolt/pifx.svg)](https://travis-ci.org/cydrobolt/pifx)
 
 A Python library for the LIFX cloud HTTP API
