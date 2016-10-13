@@ -27,7 +27,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.0.1',
+    version='0.0.2',
 
     description="""PIFX is a Python library for the LIFX cloud HTTP API""",
 
@@ -46,7 +46,10 @@ setup(
         'Intended Audience :: Developers',
 
         'License :: OSI Approved :: Apache Software License',
-        'Topic :: Software Development :: Libraries'
+        'Topic :: Software Development :: Libraries',
+
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
     ],
 
     keywords='lifx iot library lights sdk',
