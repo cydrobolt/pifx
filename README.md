@@ -1,5 +1,6 @@
 <img src="files/pifx.png" width="300">
 
+[![PyPI](https://img.shields.io/pypi/v/pifx.svg)]()
 [![](https://travis-ci.org/cydrobolt/pifx.svg)](https://travis-ci.org/cydrobolt/pifx)
 
 A Python library for the LIFX cloud HTTP API
