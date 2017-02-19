@@ -49,7 +49,7 @@ class PIFX:
             identifier_name = url_arg_matches.group(1)
             argument_content = url_arg_matches.group(2)
 
-            encoded_arg = six.moves.urllib.parse.quote_plus(argument_content)
+            encoded_arg = argument_content.replace(" ", "%20")
 
             return identifier_name + ":" + encoded_arg
 
