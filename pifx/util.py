@@ -16,7 +16,6 @@
 #
 
 import json
-import urllib
 import six
 from .constants import A_OK_HTTP_CODES, A_ERROR_HTTP_CODES
 
