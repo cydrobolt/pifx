@@ -17,7 +17,7 @@
 
 from . import util
 import re
-import requests, json, six
+import requests, json
 
 class PIFX:
     """Main PIFX class"""
@@ -39,7 +39,7 @@ class PIFX:
         if ":" not in url_arg:
             # no identifiers
             # can encode entire argument
-            return six.moves.urllib.parse.quote_plus(url_arg)
+            return util.encode_url_path(url_arg)
         else:
             # identifier found
             # separate identifier string from argument
@@ -49,7 +49,7 @@ class PIFX:
             identifier_name = url_arg_matches.group(1)
             argument_content = url_arg_matches.group(2)
 
-            encoded_arg = six.moves.urllib.parse.quote_plus(argument_content)
+            encoded_arg = util.encode_url_path(argument_content)
 
             return identifier_name + ":" + encoded_arg
 

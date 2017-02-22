@@ -16,6 +16,7 @@
 #
 
 import json
+import six
 from .constants import A_OK_HTTP_CODES, A_ERROR_HTTP_CODES
 
 def generate_auth_header(api_key):
@@ -52,3 +53,8 @@ def handle_error(response):
         raise Exception(raise_error)
     else:
         return True
+
+def encode_url_path(url):
+    """Encodes the path url string replacing special characters with properly escaped sequences.  
+    Not intended for use with query string parameters. """
+    return six.moves.urllib.parse.quote(url)
