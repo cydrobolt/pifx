@@ -1,6 +1,6 @@
 import sys
 sys.path.insert(1, '..')
 
-import pifx
+from pifx import PIFX
 
 # TODO

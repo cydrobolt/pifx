@@ -17,7 +17,6 @@
 
 import json
 
-from pifx import util
 from pifx.client import LIFXWebAPIClient
 
 
@@ -62,7 +61,6 @@ class PIFX:
             e.g 10
             Setting transition time, in seconds, from 0.0 to
             3155760000.0 (100 years).
-
         """
 
         argument_tuples = [
@@ -173,7 +171,6 @@ class PIFX:
             Defines where in a period the target color is at its maximum.
             Minimum 0.0, maximum 1.0.
             default: 0.5
-
         """
 
         argument_tuples = [
@@ -228,7 +225,6 @@ class PIFX:
             Defines where in a period the target color is at its maximum.
             Minimum 0.0, maximum 1.0.
             default: 0.5
-
         """
 
         argument_tuples = [
