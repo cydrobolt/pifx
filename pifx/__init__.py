@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Chaoyi Zha <me@cydrobolt.com>
+# Copyright © 2018 Chaoyi Zha <me@cydrobolt.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -96,7 +96,8 @@ class PIFX:
 
         duration: Double
             e.g 10
-            Setting transition time, in seconds, from 0.0 to 3155760000.0 (100 years).
+            Setting transition time, in seconds, from 0.0 to
+            3155760000.0 (100 years).
 
         """
 
@@ -118,11 +119,13 @@ class PIFX:
 
         return util.parse_data(parsed_data)
 
-    def set_delta(self, selector='all',
+    def state_delta(self, selector='all',
         power=None, duration=1.0, infrared=None, hue=None,
         saturation=None, brightness=None, kelvin=None):
-        """
-        select: required String
+        """Given a state delta, apply the modifications to lights' state
+        over a given period of time.
+
+        selector: required String
             The selector to limit which lights are controlled.
 
         power: String
@@ -149,7 +152,6 @@ class PIFX:
         kelvin: Double
             Change the kelvin by this additive amount; the resulting kelvin is
             clipped to [2500, 9000].
-
         """
 
         endpoint = self.full_http_endpoint(
