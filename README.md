@@ -59,7 +59,7 @@ Contributing:
 PIFX is an open source library not affiliated or endorsed by LIFX ®
 
 ```
- Copyright © 2015-2017 Chaoyi Zha <me@cydrobolt.com>
+ Copyright © 2015-2018 Chaoyi Zha <me@cydrobolt.com>
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.

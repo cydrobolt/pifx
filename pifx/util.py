@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Chaoyi Zha <me@cydrobolt.com>
+# Copyright © 2015-2018 Chaoyi Zha <me@cydrobolt.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,8 +16,12 @@
 #
 
 import json
+import re
+
 import six
-from .constants import A_OK_HTTP_CODES, A_ERROR_HTTP_CODES
+
+from pifx.constants import A_ERROR_HTTP_CODES, A_OK_HTTP_CODES
+
 
 def generate_auth_header(api_key):
     headers = {
@@ -55,6 +59,26 @@ def handle_error(response):
         return True
 
 def encode_url_path(url):
-    """Encodes the path url string replacing special characters with properly escaped sequences.  
+    """Encodes the path url string replacing special characters with properly escaped sequences.
     Not intended for use with query string parameters. """
     return six.moves.urllib.parse.quote(url)
+
+def encode_url_arg(self, url_arg):
+    arg_regex = '(\w+):(.*)'
+
+    if ":" not in url_arg:
+        # no identifiers
+        # can encode entire argument
+        return encode_url_path(url_arg)
+    else:
+        # identifier found
+        # separate identifier string from argument
+        # text, then encode argument text
+        url_arg_matches = re.match(arg_regex, url_arg)
+
+        identifier_name = url_arg_matches.group(1)
+        argument_content = url_arg_matches.group(2)
+
+        encoded_arg = encode_url_path(argument_content)
+
+        return identifier_name + ":" + encoded_arg
