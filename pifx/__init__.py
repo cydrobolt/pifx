@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Chaoyi Zha <me@cydrobolt.com>
+# Copyright © 2018 Chaoyi Zha <me@cydrobolt.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -96,7 +96,8 @@ class PIFX:
 
         duration: Double
             e.g 10
-            Setting transition time, in seconds, from 0.0 to 3155760000.0 (100 years).
+            Setting transition time, in seconds, from 0.0 to
+            3155760000.0 (100 years).
 
         """
 
@@ -112,6 +113,63 @@ class PIFX:
         data = util.arg_tup_to_dict(argument_tuples)
 
         res = self._s.put(endpoint, data=data, headers=self.headers)
+        parsed_data = util.parse_response(res)
+
+        util.handle_error(res)
+
+        return util.parse_data(parsed_data)
+
+    def state_delta(self, selector='all',
+        power=None, duration=1.0, infrared=None, hue=None,
+        saturation=None, brightness=None, kelvin=None):
+        """Given a state delta, apply the modifications to lights' state
+        over a given period of time.
+
+        selector: required String
+            The selector to limit which lights are controlled.
+
+        power: String
+            The power state you want to set on the selector. on or off
+
+        duration: Double
+            How long in seconds you want the power action to take.
+            Range: 0.0 – 3155760000.0 (100 years)
+
+        infrared: Double
+            The maximum brightness of the infrared channel.
+
+        hue: Double
+            Rotate the hue by this angle in degrees.
+
+        saturation: Double
+            Change the saturation by this additive amount; the resulting
+            saturation is clipped to [0, 1].
+
+        brightness: Double
+            Change the brightness by this additive amount; the resulting
+            brightness is clipped to [0, 1].
+
+        kelvin: Double
+            Change the kelvin by this additive amount; the resulting kelvin is
+            clipped to [2500, 9000].
+        """
+
+        endpoint = self.full_http_endpoint(
+            "lights/{}/state/delta".format(self.encode_url_arg(selector))
+        )
+
+        argument_tuples = [
+            ("power", power),
+            ("duration", duration),
+            ("infrared", infrared),
+            ("hue", hue),
+            ("saturation", saturation),
+            ("brightness", brightness),
+            ("kelvin", kelvin)
+        ]
+        data = util.arg_tup_to_dict(argument_tuples)
+
+        res = self._s.post(endpoint, data=data, headers=self.headers)
         parsed_data = util.parse_response(res)
 
         util.handle_error(res)
