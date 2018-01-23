@@ -20,6 +20,7 @@ import json
 from pifx import util
 from pifx.client import LIFXWebAPIClient
 
+
 class PIFX:
     """Main PIFX class"""
     def __init__(self, api_key, http_endpoint=None):

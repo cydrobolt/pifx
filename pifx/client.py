@@ -1,5 +1,7 @@
-from pifx import util
 import requests
+
+from pifx import util
+
 
 class LIFXWebAPIClient:
     def __init__(self, api_key, http_endpoint=None):
