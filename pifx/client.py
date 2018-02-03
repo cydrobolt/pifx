@@ -23,6 +23,7 @@ class LIFXWebAPIClient:
         endpoint,
         endpoint_args=[],
         argument_tuples=None,
+        json_body=False,
         parse_data=True
     ):
         http_endpoint = self._full_http_endpoint(
@@ -33,8 +34,13 @@ class LIFXWebAPIClient:
         if argument_tuples is not None:
             data = util.arg_tup_to_dict(argument_tuples)
 
-        res = self._s.request(
-            method=method, url=http_endpoint, data=data, headers=self.headers)
+        if json_body:
+            res = self._s.request(
+                method=method, url=http_endpoint, json=data, headers=self.headers)
+        else:
+            res = self._s.request(
+                method=method, url=http_endpoint, data=data, headers=self.headers)
+
         parsed_response = util.parse_response(res)
 
         util.handle_error(res)

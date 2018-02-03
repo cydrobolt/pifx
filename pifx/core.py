@@ -190,7 +190,7 @@ class PIFX:
 
     def pulse_lights(self, color, selector='all',
         from_color=None, period=1.0, cycles=1.0,
-        persist=False, power_on=True, peak=0.5, duration=1.0):
+        persist=False, power_on=True):
         """Perform pulse effect on lights.
 
         selector: String
@@ -220,11 +220,6 @@ class PIFX:
         power_on: Boolean
             If true, turn the bulb on if it is not already on.
             default: true
-
-        peak: String
-            Defines where in a period the target color is at its maximum.
-            Minimum 0.0, maximum 1.0.
-            default: 0.5
         """
 
         argument_tuples = [
@@ -234,8 +229,6 @@ class PIFX:
             ("cycles", cycles),
             ("persist", persist),
             ("power_on", power_on),
-            ("peak", peak),
-            ("duration", duration)
         ]
 
         return self.client.perform_request(
@@ -243,7 +236,7 @@ class PIFX:
             endpoint_args=[selector], argument_tuples=argument_tuples)
 
     def cycle_lights(self, states,
-        defaults, direction='forward', selector='all',):
+        defaults, direction='forward', selector='all'):
         """Cycle through list of effects.
 
         Provide array states as a list of dictionaries with set_state arguments.
@@ -265,17 +258,15 @@ class PIFX:
             default: forward
         """
 
-        states_json = json.dumps(states)
-
         argument_tuples = [
-            ("states", states_json),
+            ("states", states),
             ("defaults", defaults),
             ("direction", direction)
         ]
 
         return self.client.perform_request(
-            method='post', endpoint='lights/{}/effects/pulse',
-            endpoint_args=[selector], argument_tuples=argument_tuples)
+            method='post', endpoint='lights/{}/cycle', endpoint_args=[selector],
+            argument_tuples=argument_tuples, json_body=True)
 
     def list_scenes(self):
         """Return a list of scenes.
