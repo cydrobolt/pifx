@@ -134,7 +134,7 @@ class PIFX:
 
     def breathe_lights(self, color, selector='all',
         from_color=None, period=1.0, cycles=1.0,
-        persist=False, power_on=True, peak=0.5, duration=1.0):
+        persist=False, power_on=True, peak=0.5):
         """Perform breathe effect on lights.
 
         selector: String
@@ -179,7 +179,6 @@ class PIFX:
             ("persist", persist),
             ("power_on", power_on),
             ("peak", peak),
-            ("duration", duration)
         ]
 
         return self.client.perform_request(
