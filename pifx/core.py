@@ -15,8 +15,6 @@
 # limitations under the License.
 #
 
-import json
-
 from pifx.client import LIFXWebAPIClient
 
 
