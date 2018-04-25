@@ -34,6 +34,10 @@ def arg_tup_to_dict(argument_tuples):
     data = dict()
     for arg_name, arg_val in argument_tuples:
         if arg_val != None:
+            if arg_val == True:
+                arg_val = "true"
+            elif arg_val == False:
+                arg_val = "false"
             data[arg_name] = arg_val
 
     return data
