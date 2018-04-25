@@ -33,7 +33,11 @@ def arg_tup_to_dict(argument_tuples):
     """Given a set of argument tuples, set their value in a data dictionary if not blank"""
     data = dict()
     for arg_name, arg_val in argument_tuples:
-        if arg_val != None:
+        if arg_val is not None:
+            if arg_val is True:
+                arg_val = 'true'
+            elif arg_val is False:
+                arg_val = 'false'
             data[arg_name] = arg_val
 
     return data
