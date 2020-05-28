@@ -22,9 +22,9 @@ To use PIFX, initiate an instance of the PIFX class with your API token to use i
     p = pifx.PIFX(api_key='API_KEY_GOES_HERE')
 
     p.toggle_power() # toggle all lights
-    p.toggle_power('label:Bedroom') # toggle light with label "Master Bedroom"
+    p.toggle_power('label:Bedroom') # toggle light with label "Bedroom"
     p.set_state(color='blue', brightness='0.85') # set brightness to 85% and color to blue
-    p.pulse_lights(color='red', duration=2.5) # pulse lights for 2.5 seconds
+    p.pulse_lights(color='red', period=2.5) # pulse lights with a period of 2.5 seconds
 
 PIFX Usage Documentation:
 
