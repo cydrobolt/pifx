@@ -72,6 +72,41 @@ class PIFX:
             method='put', endpoint='lights/{}/state',
             endpoint_args=[selector], argument_tuples=argument_tuples)
 
+    def set_states(self, states=[{'selector': 'all',
+        'power': None, 'color': None, 'brightness': None, 'duration': None}]):
+        """Given a list of states, set the state of one or more lights.
+        States may contain selector, power, color, brightness and duration parameters
+        as detailed below.
+        Selectors can be based on id, scene_id, group_id, label, etc.
+        Returns list of lightbulb statuses if successful.
+        See http://api.developer.lifx.com/v1/docs/selectors
+
+
+        selector: required String
+            The selector to limit which lights will run the effect.
+
+        power: String
+            e.g "on" or "off"
+
+        color: String
+            e.g #ff0000 or "red"
+            Color to set selected bulbs.
+            Hex color code, color name, saturation percentage, hue, RGB, etc.
+            See http://api.developer.lifx.com/v1/docs/colors
+
+        brightness: Double
+            e.g 0.5
+            Set brightness level from 0 to 1
+
+        duration: Double
+            e.g 10
+            Setting transition time, in seconds, from 0.0 to
+            3155760000.0 (100 years).
+        """
+        json_body = {"states": states}
+        return self.client.perform_request(
+            method='put', endpoint='lights/states', json_body=json_body)
+
     def state_delta(self, selector='all',
         power=None, duration=1.0, infrared=None, hue=None,
         saturation=None, brightness=None, kelvin=None):
