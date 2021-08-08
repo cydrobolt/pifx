@@ -36,7 +36,7 @@ class LIFXWebAPIClient:
 
         if json_body:
             res = self._s.request(
-                method=method, url=http_endpoint, json=data, headers=self.headers)
+                method=method, url=http_endpoint, json=json_body, headers=self.headers)
         else:
             res = self._s.request(
                 method=method, url=http_endpoint, data=data, headers=self.headers)
