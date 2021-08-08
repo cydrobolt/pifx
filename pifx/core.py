@@ -72,10 +72,9 @@ class PIFX:
             method='put', endpoint='lights/{}/state',
             endpoint_args=[selector], argument_tuples=argument_tuples)
 
-    def set_states(self, states=[{'selector': 'all',
-        'power': None, 'color': None, 'brightness': None, 'duration': None}]):
-        """Given a list of states, set the state of one or more lights.
-        States may contain selector, power, color, brightness and duration parameters
+    def set_states(self, states=None):
+        """Given a collection of "state" dictionaries, set the state of one or more lights.
+        State dictionaries may contain selector, power, color, brightness and duration parameters
         as detailed below.
         Selectors can be based on id, scene_id, group_id, label, etc.
         Returns list of lightbulb statuses if successful.
@@ -102,7 +101,12 @@ class PIFX:
             e.g 10
             Setting transition time, in seconds, from 0.0 to
             3155760000.0 (100 years).
+
+        Example invocation:
+        pifx.set_states([{'selector': 'id:XXXYYYZZZZ', 'color': 'red'}, {'selector': 'id:AAABBBCCCCC', 'brightness': 0.8}])
         """
+        if states is None:
+            states = []
         json_body = {"states": states}
         return self.client.perform_request(
             method='put', endpoint='lights/states', json_body=json_body)
